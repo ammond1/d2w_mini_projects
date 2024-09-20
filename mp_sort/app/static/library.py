@@ -66,15 +66,14 @@ def sortnumber2():
 	string_holder = ''
 	
 	for i in range(len(value)):
-		if i == len(value) -1:
-			string_holder = string_holder + value[i]
-			array.append(int(string_holder))
-			string_holder=''
-		elif value[i] == ',':
+		if value[i] == ',':
 			array.append(int(string_holder))
 			string_holder = ''
 		else:
 			string_holder = string_holder + value[i]
+		
+	if string_holder:
+		array.append(int(string_holder))
 	sort_it(array)
 	array_str = string_it(array)
 
@@ -101,6 +100,6 @@ def string_it(array):
 		if i == len(array)-1:
 			end = '.'
 		else:
-			end = ','
+			end = ', '
 		array_str = array_str + str(array[i]) + end
 	return array_str

@@ -2,42 +2,45 @@ from org.transcrypt.stubs.browser import *
 import random
 
 def gen_random_int(number, seed):
-	pass
+	random.seed(seed)
+	array = list(range(number))
+	return array
 
 def generate():
 	number = 10
 	seed = 200
 
-	# call gen_random_int() with the given number and seed
-	# store it to the variable array
-	pass
-
-	array = None
-	# convert the items into one single string 
-	# the number should be separated by a comma
-	# and a full stop should end the string.
-	pass
-
-	array_str = None
+	array = gen_random_int(10,200)
+	random.shuffle(array)
+	array_str = string_it(array)
 
 	# This line is to placed the string into the HTML
 	# under div section with the id called "generate"	
 	document.getElementById("generate").innerHTML = array_str
 
-
 def sortnumber1():
-	'''	This function is used in Exercise 1.
-		The function is called when the sort button is clicked.
+	number_string = document.getElementById("generate").innerHTML
+	array = []
 
-		You need to do the following:
-		- get the list of numbers from the "generate" HTML id, use document.getElementById(id).innerHTML
-		- create a list of integers from the string of numbers
-		- call your sort function, either bubble sort or insertion sort
-		- create a string of the sorted numbers and store it in array_str
-	'''
+	#creates list of integers from string, removing the ',' and '.'
+	for i in number_string:
+		if i != ',' and i!='.':
+			array.append(int(i))
+	#calls bubble sort function
+	sort_it(array)
+
+	# '''	This function is used in Exercise 1.
+	# 	The function is called when the sort button is clicked.
+
+	# 	You need to do the following:
+	# 	- get the list of numbers from the "generate" HTML id, use document.getElementById(id).innerHTML
+	# 	- create a list of integers from the string of numbers
+	# 	- call your sort function, either bubble sort or insertion sort
+	# 	- create a string of the sorted numbers and store it in array_str
+	# '''
 	pass
-
-	array_str = None
+	#creates string of sorted number
+	array_str = string_it(array)
 	
 	document.getElementById("sorted").innerHTML = array_str
 
@@ -54,18 +57,46 @@ def sortnumber2():
 	'''
 	# The following line get the value of the text input called "numbers"
 	value = document.getElementsByName("numbers")[0].value
-
 	# Throw alert and stop if nothing in the text input
 	if value == "":
 		window.alert("Your textbox is empty")
 		return
-
-	# Your code should start from here
-	# store the final string to the variable array_str
-	pass
-
-	array_str = None
+	
+	array = []
+	string_holder = ''
+	
+	for i in range(len(value)):
+		if value[i] != ',':
+			string_holder= string_holder + value[i]
+		elif value[i] ==',' or i == len(value) - 1:
+			array.append(int(string_holder))
+			string_holder = ''
+	sort_it(array)
+	array_str = string_it(array)
 
 	document.getElementById("sorted").innerHTML = array_str
 
+def sort_it(array):
+	switch = True
+	n = len(array)
+	while switch == True:
+		switch = False
+		for i in range(0,n-1):
+			inner_first = array[i]
+			inner_second = array[i+1]
+			if inner_first > inner_second:
+				switch = True
+				array[i] , array[i+1] = array[i+1] , array[i]
+	n -= 1
+	return array
 
+def string_it(array):
+	array_str = ''
+	
+	for i in range(len(array)):
+		if i == len(array) -1:
+			end = '.'
+		else:
+			end = ','
+		array_str = array_str + str(array[i]) + end
+	return array_str

@@ -82,13 +82,13 @@ def sort_it(array):
 	while switch == True:
 		switch = False
 		new_n = 0
-		for i in range(0,n-2):
+		for i in range(0,n-1):
 			inner_first = array[i]
 			inner_second = array[i+1]
 			if inner_first > inner_second:
 				array[i] , array[i+1] = array[i+1] , array[i]
 				switch = True
-				new_n = i+1
+				new_n = i
 	n = new_n
 	return array
 

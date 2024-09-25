@@ -9,12 +9,11 @@ def gen_random_int(number, seed):
 def generate():
 	number = 10
 	seed = 200
-
-	array = gen_random_int(10,200)
+	array = gen_random_int(number, seed)
 	random.shuffle(array)
 	array_str = string_it(array)
 
-	# This line is to placed the string into the HTML
+	# This line is to place the string into the HTML
 	# under div section with the id called "generate"	
 	document.getElementById("generate").innerHTML = array_str
 

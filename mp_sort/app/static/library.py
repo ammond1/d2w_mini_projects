@@ -89,7 +89,7 @@ def sort_it(array):
 				array[i] , array[i+1] = array[i+1] , array[i]
 				switch = True
 				new_n = i
-	n = new_n
+		n = new_n
 	return array
 
 def string_it(array):

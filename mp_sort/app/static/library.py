@@ -19,12 +19,10 @@ def generate():
 
 def sortnumber1():
 	number_string = document.getElementById("generate").innerHTML
-	array = []
 
 	#creates list of integers from string, removing the ',' and '.'
-	for i in number_string:
-		if i != ',' and i!='.':
-			array.append(int(i))
+	array = [int(num) for num in number_string.split(',')]
+
 	#calls bubble sort function
 	sort_it(array)
 

@@ -21,7 +21,7 @@ def sortnumber1():
 	number_string = document.getElementById("generate").innerHTML
 
 	#creates list of integers from string, removing the ',' and '.'
-	array = [int(num) for num in number_string.split(',')]
+	array = [int(num.replace(' ','')) for num in number_string.split(',')]
 
 	#calls bubble sort function
 	sort_it(array)
@@ -35,7 +35,7 @@ def sortnumber1():
 	# 	- call your sort function, either bubble sort or insertion sort
 	# 	- create a string of the sorted numbers and store it in array_str
 	# '''
-	pass
+	
 	#creates string of sorted number
 	array_str = string_it(array)
 	
@@ -82,7 +82,7 @@ def sort_it(array):
 	while switch == True:
 		switch = False
 		new_n = 0
-		for i in range(0,n-1):
+		for i in range(0,n):
 			inner_first = array[i]
 			inner_second = array[i+1]
 			if inner_first > inner_second:

@@ -4,13 +4,14 @@ import random
 def gen_random_int(number, seed):
 	random.seed(seed)
 	array = list(range(number))
+	random.shuffle(array)
 	return array
 
 def generate():
 	number = 10
 	seed = 200
 	array = gen_random_int(number, seed)
-	random.shuffle(array)
+	
 	array_str = string_it(array)
 
 	# This line is to place the string into the HTML

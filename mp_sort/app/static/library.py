@@ -14,7 +14,6 @@ def generate():
 	array_str = string_it(array)
 
 	# This line is to place the string into the HTML
-	# under div section with the id called "generate"	
 	document.getElementById("generate").innerHTML = array_str
 
 def sortnumber1():
@@ -26,32 +25,12 @@ def sortnumber1():
 	#calls bubble sort function
 	sort_it(array)
 
-	# '''	This function is used in Exercise 1.
-	# 	The function is called when the sort button is clicked.
-
-	# 	You need to do the following:
-	# 	- get the list of numbers from the "generate" HTML id, use document.getElementById(id).innerHTML
-	# 	- create a list of integers from the string of numbers
-	# 	- call your sort function, either bubble sort or insertion sort
-	# 	- create a string of the sorted numbers and store it in array_str
-	# '''
-	
-	#creates string of sorted number
+	#calls string_it function to convert list into string
 	array_str = string_it(array)
 	
 	document.getElementById("sorted").innerHTML = array_str
 
 def sortnumber2():
-	'''	This function is used in Exercise 2.
-		The function is called when the sort button is clicked.
-
-		You need to do the following:
-		- Get the numbers from a string variable "value".
-		- Split the string using comma as the separator and convert them to 
-			a list of numbers
-		- call your sort function, either bubble sort or insertion sort
-		- create a string of the sorted numbers and store it in array_str
-	'''
 	# The following line get the value of the text input called "numbers"
 	value = document.getElementsByName("numbers")[0].value
 	# Throw alert and stop if nothing in the text input
@@ -62,13 +41,14 @@ def sortnumber2():
 	array = []
 	string_holder = ''
 	
+	#alternate way to remove ',' from string and turn it into a list, using the ',' as a signal to append previous digits
 	for i in range(len(value)):
 		if value[i] == ',':
 			array.append(int(string_holder))
 			string_holder = ''
 		else:
 			string_holder = string_holder + value[i]
-		
+	#appends the last value into the list 
 	if string_holder:
 		array.append(int(string_holder))
 	sort_it(array)
@@ -76,6 +56,7 @@ def sortnumber2():
 
 	document.getElementById("sorted").innerHTML = array_str
 
+#bubble sort v4 function
 def sort_it(array):
 	switch = True
 	n = len(array)
@@ -92,6 +73,7 @@ def sort_it(array):
 		n = new_n
 	return array
 
+#turns input array into a string with appropriate seperations and formatting 
 def string_it(array):
 	array_str = ''
 	

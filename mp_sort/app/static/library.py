@@ -42,7 +42,7 @@ def sortnumber2():
 	array = []
 	string_holder = ''
 	
-	#alternate way to remove ',' from string and turn it into a list, using the ',' as a signal to append previous digits
+	#original way to remove ',' from string and turn it into a list, using the ',' as a signal to append previous digits
 	for i in range(len(value)):
 		if value[i] == ',':
 			array.append(int(string_holder))

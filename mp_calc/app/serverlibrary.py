@@ -60,10 +60,111 @@ def mergesort(array: list , byfunc = None) -> None:
 
 
 class Stack:
-  pass
+    def __init__(self):
+        self.__items= []
+        
+    def push(self, item):
+        self.__items.append(item)
+
+    def pop(self):
+        try:
+            item = self.__items.pop(-1)
+            return item
+        except:
+            return None
+
+    def peek(self) :
+        try:
+            item = self.__items[-1]
+            return item
+        except:
+            return None
+
+    @property
+    def is_empty(self) :
+        if len(self.__items) == 0:
+            return True
+        else:
+            return False
+
+    @property
+    def size(self):
+        return len(self.__items)
 
 class EvaluateExpression:
-  pass
+  valid_char = '0123456789+-*/() '
+  operators = '+-*/()'
+  op_map = {
+    '+' : lambda a,b : a+b,
+    '-' : lambda a,b : a-b,
+    '/' : lambda a,b : a//b,
+    '*' : lambda a,b : a*b,
+  }
+  def __init__(self, string=""):
+    self.expr = string
+    self._expr = self.expr
+
+  @property
+  def expression(self):
+    return self._expr
+
+  @expression.setter
+  def expression(self, new_expr):
+    self.expr = ""
+    for char in new_expr:
+      if char not in self.valid_char:
+        self.expr = ""
+        break
+      else:
+        self.expr += char
+    self._expr = self.expr
+
+  
+  def insert_space(self):
+    new_string =""
+    for i in range(len(self.expr)):
+      if self.expr[i] in self.operators:
+        new_string += " " + self.expr[i] + " "
+      else:
+        new_string += self.expr[i]
+    return new_string
+
+
+  def process_operator(self, operand_stack, operator_stack):
+    b = int(operand_stack.pop())
+    a = int(operand_stack.pop())
+    op = operator_stack.pop()
+    evaluate = self.op_map[op](a,b)
+    if operator_stack.peek() == '(':
+      operator_stack.pop()
+    operand_stack.push(evaluate)
+
+    
+  
+  def evaluate(self):
+    operand_stack = Stack()
+    operator_stack = Stack()
+    expression = self.insert_space()
+    tokens = expression.split()
+    for char in tokens:
+      if char == '+' or char =="-":
+        while operator_stack.is_empty is False and operator_stack.peek() not in "()":
+          self.process_operator(operand_stack, operator_stack)
+        operator_stack.push(char)
+      elif char == "*" or char == "/":
+        while operator_stack.is_empty is False and operator_stack.peek() in "*/":
+          self.process_operator(operand_stack, operator_stack)
+        operator_stack.push(char)
+      elif char == ")":
+        while operator_stack.is_empty is False and operator_stack.peek() != "(": 
+          self.process_operator(operand_stack, operator_stack)
+      elif char == "(":
+        operator_stack.push(char)
+      else:
+        operand_stack.push(char)
+    while operator_stack.is_empty is False:
+      self.process_operator(operand_stack, operator_stack)
+    return operand_stack.pop()
 
 
 def get_smallest_three(challenge):

@@ -35,26 +35,31 @@ def questions():
 	users = User.query.all()
 	userlist = [(u.username, u.username) for u in users]
 	form.assign_to.choices=userlist
-	if form.validate_on_submit():
-		question = Question(expression=form.expression.data)
+	if form.validate_on_submit(): # validate function is empty
 		evalans = EvaluateExpression(form.expression.data)
-		question.answer = evalans.evaluate()
-		question.author = current_user.id 
-		challenge = Challenge(question=question)
-		username_to = []
-		for name in form.assign_to.data:
-			username_to.append(User.query.filter_by(username=name).first())
+		test = evalans.evaluate()
+		if test != "ZeroDivisionError": # added another validation to make sure not divided by zero
+			question = Question(expression=form.expression.data)
+			question.answer = evalans.evaluate()
+			question.author = current_user.id 
+			challenge = Challenge(question=question)
+			username_to = []
+			for name in form.assign_to.data:
+				username_to.append(User.query.filter_by(username=name).first())
 
-		challenge.to_user = username_to
-		db.session.add(question)
-		db.session.add(challenge)
-		db.session.commit()
-		flash('Congratulations, you have created a new question.')
-		questions = current_user.questions.all()
+			challenge.to_user = username_to
+			db.session.add(question)
+			db.session.add(challenge)
+			db.session.commit()
+			flash('Congratulations, you have created a new question.')
+			questions = current_user.questions.all()	
+		else:
+			flash('Boo, u cannot divide by 0 la')
 	return render_template('questions.html', title='Questions', 
-							user=current_user,
-							questions=questions,
-							form=form, prefix=prefix)
+								user=current_user,
+								questions=questions,
+								form=form, prefix=prefix)
+
 
 @application.route('/challenges/', methods=['GET', 'POST'])
 @login_required

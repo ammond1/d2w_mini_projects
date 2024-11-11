@@ -100,25 +100,30 @@ class EvaluateExpression:
     '/' : lambda a,b : a//b,
     '*' : lambda a,b : a*b,
   }
+
   def __init__(self, string=""):
-    self.expr = string
-    self._expr = self.expr
+    self._expr = ""
+    if self._valid_string(string): # checks if input contains non valid
+       self._expr = string
+
+  def _valid_string(self, string: str) -> bool: # makes sure that the input only contains the operators and operands
+    valid = False
+    for char in string:
+      valid = char in EvaluateExpression.valid_char
+      if not valid:
+        break
+    return valid
 
   @property
-  def expression(self):
+  def expr(self):
     return self._expr
 
-  @expression.setter
-  def expression(self, new_expr):
-    self.expr = ""
-    for char in new_expr:
-      if char not in self.valid_char:
-        self.expr = ""
-        break
-      else:
-        self.expr += char
-    self._expr = self.expr
-
+  @expr.setter
+  def expr(self, new_expr):
+    if self._valid_string(new_expr):
+        self._expr = new_expr
+    else:
+       self._expr = ""
   
   def insert_space(self):
     new_string =""
@@ -130,41 +135,72 @@ class EvaluateExpression:
     return new_string
 
 
+  def division(self, a: int, b: int): # account for division by zero
+      if b == 0:
+        return None
+      else:
+        return a // b
+
   def process_operator(self, operand_stack, operator_stack):
     b = int(operand_stack.pop())
     a = int(operand_stack.pop())
     op = operator_stack.pop()
-    evaluate = self.op_map[op](a,b)
+    if b == 0 and op == "/":
+      evaluate = self.division(a, b) # for divide by 0 exception ** returns None if divided by zero
+    else:
+      evaluate = self.op_map[op](a,b)
     if operator_stack.peek() == '(':
       operator_stack.pop()
     operand_stack.push(evaluate)
 
+  def invalid_next(self, operand_stack): #make sure nonetype is not processed
+    error_msg = "ZeroDivisionError"
+    if not operand_stack.is_empty:
+      if operand_stack.peek() == None: # added condition if a None object is pushed by process_operator
+        print("ran")
+        return True, error_msg #set as error message first
+      else:
+        return False, None
+    else:
+      return False, None
     
-  
-  def evaluate(self):
+  def evaluate(self): ## added a check condition for every case where a while loop is needed, man its hella ugly but i covered all cases
     operand_stack = Stack()
     operator_stack = Stack()
     expression = self.insert_space()
-    tokens = expression.split()
+    tokens = expression.split() # makes a list of strings
     for char in tokens:
+      if self.invalid_next(operand_stack)[0]: #
+        return self.invalid_next(operand_stack)[1] #
       if char == '+' or char =="-":
         while operator_stack.is_empty is False and operator_stack.peek() not in "()":
+          if self.invalid_next(operand_stack)[0]: #
+            return self.invalid_next(operand_stack)[1] #
           self.process_operator(operand_stack, operator_stack)
         operator_stack.push(char)
       elif char == "*" or char == "/":
         while operator_stack.is_empty is False and operator_stack.peek() in "*/":
+          if self.invalid_next(operand_stack)[0]:
+            return self.invalid_next(operand_stack)[1]
           self.process_operator(operand_stack, operator_stack)
         operator_stack.push(char)
       elif char == ")":
-        while operator_stack.is_empty is False and operator_stack.peek() != "(": 
+        while operator_stack.is_empty is False and operator_stack.peek() != "(":
+          if self.invalid_next(operand_stack)[0]:
+            return self.invalid_next(operand_stack)[1] 
           self.process_operator(operand_stack, operator_stack)
       elif char == "(":
         operator_stack.push(char)
       else:
         operand_stack.push(char)
     while operator_stack.is_empty is False:
+      if self.invalid_next(operand_stack)[0]:
+            return self.invalid_next(operand_stack)[1]
       self.process_operator(operand_stack, operator_stack)
-    return operand_stack.pop()
+    if self.invalid_next(operand_stack)[0]:
+      return self.invalid_next(operand_stack)[1]
+    else:
+      return operand_stack.pop()
 
 
 def get_smallest_three(challenge):
